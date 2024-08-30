@@ -101,6 +101,55 @@
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
   home-manager.users.moritz = { pkgs, ... }: {
+    accounts.email.accounts = {
+      "Moritz.Hedtke@t-online.de" = {
+        primary = true;
+        address = "Moritz.Hedtke@t-online.de";
+        userName = "Moritz.Hedtke@t-online.de";
+        realName = "Moritz Hedtke";
+        imap = {
+          host = "secureimap.t-online.de";
+          port = 993;
+        };
+        signature.showSignature = "append";
+        signature.text = ''
+          Viele Grüße
+          Moritz Hedtke
+        '';
+        smtp = {
+          host = "securesmtp.t-online.de";
+          port = 587;
+        };
+        thunderbird.enable = true;
+      };
+      "Moritz.Hedtke@stud.tu-darmstadt.de" = {
+        address = "Moritz.Hedtke@stud.tu-darmstadt.de";
+        userName = "mh58hyqa";
+        realName = "Moritz Hedtke";
+        imap = {
+          host = "imap.stud.tu-darmstadt.de";
+          port = 993;
+        };
+        signature.showSignature = "append";
+        signature.text = ''
+          Viele Grüße
+          Moritz Hedtke
+        '';
+        smtp = {
+          host = "smtp.tu-darmstadt.de";
+          port = 465;
+        };
+        thunderbird.enable = true;
+        # passwordCommand
+      };
+    };
+
+    programs.thunderbird = {
+      enable = true;
+      profiles.moritz = {
+        isDefault = true;
+      };
+    };
     programs.git.enable = true;
     programs.git.userName = "Moritz Hedtke";
     programs.git.userEmail = "Moritz.Hedtke@t-online.de";
@@ -115,11 +164,11 @@
     home.stateVersion = "24.05";
   };
 
-  # Install firefox.
-  programs.firefox.enable = true;
+  services.flatpak.enable = true;
 
+  # can break system audio, dont use
   programs.steam = {
-    enable = true;
+    enable = false;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
