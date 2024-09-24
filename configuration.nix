@@ -149,7 +149,7 @@ virtualisation.containers.enable = true;
           host = "securesmtp.t-online.de";
           port = 587;
         };
-        thunderbird.enable = true;
+        #thunderbird.enable = true;
       };
       "Moritz.Hedtke@stud.tu-darmstadt.de" = {
         address = "Moritz.Hedtke@stud.tu-darmstadt.de";
@@ -168,17 +168,17 @@ virtualisation.containers.enable = true;
           host = "smtp.tu-darmstadt.de";
           port = 465;
         };
-        thunderbird.enable = true;
+        #thunderbird.enable = true;
         # passwordCommand
       };
     };
 
-    programs.thunderbird = {
-      enable = true;
-      profiles.moritz = {
-        isDefault = true;
-      };
-    };
+    #programs.thunderbird = {
+      #enable = true;
+      #profiles.moritz = {
+      #  isDefault = true;
+      #};
+    #};
     programs.git.enable = true;
     programs.git.userName = "Moritz Hedtke";
     programs.git.userEmail = "Moritz.Hedtke@t-online.de";
@@ -190,7 +190,7 @@ virtualisation.containers.enable = true;
     programs.firefox.package = pkgs.firefox-bin;
     programs.vscode.enable = true;
     programs.vscode.package = pkgs.vscodium;
-    home.packages = [pkgs.mission-center pkgs.verapdf pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.jetbrains.pycharm-community pkgs.jetbrains.idea-community pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
+    home.packages = [pkgs.thunderbird pkgs.mission-center pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.jetbrains.pycharm-community pkgs.jetbrains.idea-community pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
     programs.chromium.enable = true;
 
     # The state version is required and should stay at the version you
