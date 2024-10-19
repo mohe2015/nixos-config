@@ -16,17 +16,31 @@
       <home-manager/nixos>
     ];
 
+boot.kernelPackages = pkgs.linuxPackages_latest;
+
+services.fwupd.enable = true;
+
 #boot.kernelParams = ["amd_pstate=passive"];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam" "steam-original" "steam-run"
+    "steam" "steam-original" "steam-run" "steam-unwrapped"
   ];
 
 virtualisation.libvirtd.enable = true;
 programs.virt-manager.enable = true;
 
+  services.udev.extraRules = ''
+    # Ethernet expansion card support
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8156", ATTR{power/autosuspend}="20"
+
+    # Allow access to the keyboard modules for programming, for example by
+    # visiting https://keyboard.frame.work with a WebHID-compatible browser.
+    #
+    # https://community.frame.work/t/responded-help-configuring-fw16-keyboard-with-via/47176/5
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0012", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
+  '';
 
 virtualisation.containers.enable = true;
   virtualisation = {
@@ -41,6 +55,8 @@ virtualisation.containers.enable = true;
     #  defaultNetwork.settings.dns_enabled = true;
     #};
   };
+
+services.udisks2.enable = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -172,7 +188,7 @@ virtualisation.containers.enable = true;
         # passwordCommand
       };
     };
-
+    services.ssh-agent.enable = true;
     #programs.thunderbird = {
       #enable = true;
       #profiles.moritz = {
@@ -190,7 +206,7 @@ virtualisation.containers.enable = true;
     programs.firefox.package = pkgs.firefox-bin;
     programs.vscode.enable = true;
     programs.vscode.package = pkgs.vscodium;
-    home.packages = [pkgs.thunderbird pkgs.mission-center pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.jetbrains.pycharm-community pkgs.jetbrains.idea-community pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
+    home.packages = [pkgs.typst pkgs.thunderbird pkgs.mission-center pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.jetbrains.pycharm-community pkgs.jetbrains.idea-community pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
     programs.chromium.enable = true;
 
     # The state version is required and should stay at the version you
@@ -199,7 +215,7 @@ virtualisation.containers.enable = true;
   };
 
   fonts.fontconfig.enable = true;
-  fonts.packages = [ pkgs.roboto ];
+  fonts.packages = [ pkgs.roboto pkgs.cm_unicode pkgs.newcomputermodern ];
   fonts.fontDir.enable = true;
 
   services.flatpak.enable = true;
@@ -207,9 +223,9 @@ virtualisation.containers.enable = true;
   # can break system audio, dont use
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+    #remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    #dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    #localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   };
 
   programs.wireshark.enable = true;
@@ -237,7 +253,7 @@ virtualisation.containers.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ 32108 ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
 
