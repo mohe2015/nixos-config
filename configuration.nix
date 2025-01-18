@@ -7,7 +7,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, firefox, ... }:
 
 {
   imports =
@@ -227,7 +227,7 @@ services.udisks2.enable = true;
     };
     programs.bash.enable = true;
     programs.firefox.enable = true;
-    programs.firefox.package = pkgs.firefox-bin;
+    programs.firefox.package = firefox.packages."x86_64-linux".firefox-nightly-bin;
     programs.vscode.enable = true;
     programs.vscode.package = pkgs.vscodium;
     home.packages = [ (pkgs.hwloc.override { x11Support = true; }) pkgs.signal-desktop pkgs.vlc pkgs.typst pkgs.thunderbird pkgs.mission-center pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
