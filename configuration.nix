@@ -16,7 +16,32 @@
       <home-manager/nixos>
     ];
 
-boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  hardware.keyboard.qmk.enable = true;
+
+  services.udev.packages = [ pkgs.via ];
+programs.adb.enable = true;
+  
+services.ratbagd.enable = true;
+
+programs.nix-ld.enable = true;
+
+  # Sets up all the libraries to load
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    fuse3
+    icu
+    nss
+    openssl
+    curl
+    expat
+    # ...
+  ];
+
+virtualisation.virtualbox.host.enable = true;
+ nixpkgs.config.virtualbox.host.enableExtensionPack = true;
+#boot.kernelPackages = pkgs.linuxPackages_latest;
 
 services.fwupd.enable = true;
 
@@ -25,11 +50,11 @@ services.fwupd.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam" "steam-original" "steam-run" "steam-unwrapped"
+    "steam" "steam-original" "steam-run" "steam-unwrapped" "android-studio-stable"
   ];
 
-virtualisation.libvirtd.enable = true;
-programs.virt-manager.enable = true;
+#virtualisation.libvirtd.enable = true;
+#programs.virt-manager.enable = true;
 
   services.udev.extraRules = ''
     # Ethernet expansion card support
@@ -141,7 +166,7 @@ services.udisks2.enable = true;
   users.users.moritz = {
     isNormalUser = true;
     description = "Moritz Hedtke";
-    extraGroups = [ "networkmanager" "wheel" "wireshark" ];
+    extraGroups = [ "networkmanager" "wheel" "wireshark" "adbusers" ];
   };
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
@@ -206,7 +231,7 @@ services.udisks2.enable = true;
     programs.firefox.package = pkgs.firefox-bin;
     programs.vscode.enable = true;
     programs.vscode.package = pkgs.vscodium;
-    home.packages = [pkgs.typst pkgs.thunderbird pkgs.mission-center pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.jetbrains.pycharm-community pkgs.jetbrains.idea-community pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
+    home.packages = [ (pkgs.hwloc.override { x11Support = true; }) pkgs.signal-desktop pkgs.vlc pkgs.typst pkgs.thunderbird pkgs.mission-center pkgs.htop pkgs.libreoffice-fresh pkgs.ktorrent pkgs.python3 pkgs.tinymist pkgs.inkscape pkgs.rustup pkgs.clang_18 pkgs.pkg-config pkgs.file ];
     programs.chromium.enable = true;
 
     # The state version is required and should stay at the version you
@@ -236,6 +261,7 @@ services.udisks2.enable = true;
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
+    via
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
